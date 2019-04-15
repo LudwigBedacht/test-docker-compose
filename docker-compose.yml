@@ -1,0 +1,26 @@
+version: "3.7"
+services: 
+  app:
+    build: . #looks for a dockerfile in the current directory. If the dockerfile is in a different directory the instruction "context" has to be set
+    #image: dhh/mongo_app
+    ports:
+      - 3000:3000 #The port which express listens on
+      - 9229:9229 #Default debug port for Node
+    volumes: 
+      # IMPORTANT NOTICE FOR WINDOWS: In docker for windows config you need to tick the checkbox for "C" as shared drive
+      # https://github.com/docker/compose/issues/5225
+      - .:/app #mounts the current directory to the container at /app. Useful for development
+      - /app/node_modules
+    depends_on: 
+      - mongo
+    command: npm run dev
+  
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017 
+    
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
